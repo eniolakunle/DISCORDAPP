@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Discord Options</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='styles/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <input type="button" onClick="parent.location='/'" value="Home" />
+
+    <form action="submit" method="get">
+      <p>{{input_text}}</p>
+
+      <div>
+        <input
+          type="text"
+          name="discord_text"
+          placeholder="Bought $tsla Oct 1 $775 call"
+        />
+        <input type="submit" value="Enter" />
+      </div>
+
+      <p>{{parsed_text}}</p>
+
+      <p>{{response}}</p>
+    </form>
+  </body>
+</html>
