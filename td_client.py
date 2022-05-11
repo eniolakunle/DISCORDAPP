@@ -79,7 +79,8 @@ class TDClient:
         except PostException as e:
             return (f"There was an error: {e}", HTTPStatus.BAD_REQUEST)
 
-    def _validate_option_quote(self, option_quote: dict) -> bool:
+    @staticmethod
+    def _validate_option_quote(option_quote: dict) -> bool:
         invalid_values = ["SYMBOL NOT FOUND", "-1"]
         keys_to_check = [
             "description",
