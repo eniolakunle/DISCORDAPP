@@ -53,18 +53,19 @@ class TDClient:
             raise TokenException("No access token, invalid credentials.")
         return access_token
 
-    def _build_option_body(self, symbol: str, quantity: None, instruction: str = None):
+    def _build_option_body(self, symbol: str, quantity: int, instruction: str):
         body = TDEndpointData.BUY_OPTION_BODY
         first_order = body["orderLegCollection"][0]
         first_order["instrument"]["symbol"] = symbol
-        if quantity:
-            first_order["quantity"] = quantity
-        if instruction:
-            first_order["instruction"] = instruction
+        first_order["quantity"] = quantity
+        first_order["instruction"] = instruction
+        logging.info(
+            f"Instruction: {instruction}, Quantity: {quantity}, OPTION BODY: {body}"
+        )
         return body
 
     def _place_option_order(
-        self, symbol: str, quantity: int = None, instruction: str = None
+        self, symbol: str, quantity: int, instruction: str
     ) -> Tuple[str, HTTPStatus]:
         body = self._build_option_body(symbol, quantity, instruction)
         link = TDEndpointData.PLACE_ORDER.format(accountID=ACCOUNT_ID)
@@ -113,6 +114,10 @@ class TDClient:
     def _send_post(self, link: str, **kwargs):
         return self._send("post", link, **kwargs)
 
+    @staticmethod
+    def _get_instruction(quantity):
+        return "SELL_TO_CLOSE" if quantity < 0 else "BUY_TO_OPEN"
+
     def get_transactions(self) -> dict:
         r = self._send_get(TDEndpointData.GET_TRANSACTIONS.format(accountID=ACCOUNT_ID))
         json_response = r.json()
@@ -145,9 +150,10 @@ class TDClient:
         else:
             raise GetException("Couldn't get data for ticker.")
 
-    def place_order(self, symbol, quantity: int = 1):
+    def place_order(self, symbol, quantity: int):
         # if negative quanitity, attempt to sell
-        instruction = "SELL_TO_CLOSE" if quantity < 0 else None
+        # make helper function for this V
+        instruction = self._get_instruction(quantity)
         quantity = abs(quantity)
         option_quote = self.get_symbol_quote(symbol)
         if option_quote:
