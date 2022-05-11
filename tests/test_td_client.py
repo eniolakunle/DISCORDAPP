@@ -46,3 +46,47 @@ class TDClientTestCase(unittest.TestCase):
         self.assertEqual(order["instruction"], instruction)
         self.assertEqual(order["quantity"], amount)
         self.assertEqual(order["instrument"]["symbol"], symbol)
+
+    @parameterized.expand(
+        [
+            (
+                {
+                    "symbol": "MSFT_052022P255",
+                    "description": "MSFT May 20 2022 255 Put",
+                    "openInterest": 3321,
+                    "expirationDay": -1,
+                    "expirationMonth": -1,
+                    "expirationYear": -1,
+                    "daysToExpiration": 9,
+                },
+                True,
+            ),
+            (
+                {
+                    "symbol": "MSFT_052022P255",
+                    "description": "SYMBOL NOT FOUND",
+                    "openInterest": 3321,
+                    "expirationDay": 20,
+                    "expirationMonth": 5,
+                    "expirationYear": 2022,
+                    "daysToExpiration": 9,
+                },
+                True,
+            ),
+            (
+                {
+                    "symbol": "MSFT_052022P255",
+                    "description": "SYMBOL NOT FOUND",
+                    "openInterest": 3321,
+                    "expirationDay": -1,
+                    "expirationMonth": -1,
+                    "expirationYear": -1,
+                    "daysToExpiration": 9,
+                },
+                False,
+            ),
+        ]
+    )
+    def test_validate_option_quote(self, quote, result):
+        output = TDClient._validate_option_quote(quote)
+        self.assertEqual(output, result)
