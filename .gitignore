@@ -1,0 +1,6 @@
+logs/
+__pycache__/
+DISCORDAPP/
+test/__pycache__/
+virt/
+.pytest_cache/
