@@ -1,3 +1,14 @@
+from .fixtures import TD_MOCK_POSITIONS
+from parameterized import parameterized
+import unittest
+
+import os
+
+parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0, parentdir)
+from td_client import TDClient
+
+
 class MockTDClient:
     def __init__(self):
         pass
@@ -6,137 +17,22 @@ class MockTDClient:
         return TD_MOCK_POSITIONS
 
 
-TD_MOCK_POSITIONS = [
-    {
-        "shortQuantity": 0.0,
-        "averagePrice": 2.42,
-        "currentDayCost": 341.0,
-        "currentDayProfitLoss": -239.0,
-        "currentDayProfitLossPercentage": -70.09,
-        "longQuantity": 2.0,
-        "settledLongQuantity": 0.0,
-        "settledShortQuantity": 0.0,
-        "instrument": {
-            "assetType": "OPTION",
-            "cusip": "0QQQ..PT20317500",
-            "symbol": "QQQ_042922P317.5",
-            "description": "QQQ Apr 29 2022 317.5 Put",
-            "type": "VANILLA",
-            "putCall": "PUT",
-            "underlyingSymbol": "QQQ",
-        },
-        "marketValue": 102.0,
-        "maintenanceRequirement": 0.0,
-        "previousSessionLongQuantity": 0.0,
-    },
-    {
-        "shortQuantity": 0.0,
-        "averagePrice": 2.42,
-        "currentDayCost": 341.0,
-        "currentDayProfitLoss": -239.0,
-        "currentDayProfitLossPercentage": -70.09,
-        "longQuantity": 2.0,
-        "settledLongQuantity": 0.0,
-        "settledShortQuantity": 0.0,
-        "instrument": {
-            "assetType": "OPTION",
-            "cusip": "0QQQ..PT20317500",
-            "symbol": "TTD_042922P317.5",
-            "description": "QQQ Apr 29 2022 317.5 Put",
-            "type": "VANILLA",
-            "putCall": "PUT",
-            "underlyingSymbol": "QQQ",
-        },
-        "marketValue": 102.0,
-        "maintenanceRequirement": 0.0,
-        "previousSessionLongQuantity": 0.0,
-    },
-    {
-        "shortQuantity": 0.0,
-        "averagePrice": 2.42,
-        "currentDayCost": 341.0,
-        "currentDayProfitLoss": -239.0,
-        "currentDayProfitLossPercentage": -70.09,
-        "longQuantity": 2.0,
-        "settledLongQuantity": 0.0,
-        "settledShortQuantity": 0.0,
-        "instrument": {
-            "assetType": "OPTION",
-            "cusip": "0QQQ..PT20317500",
-            "symbol": "DDOG_042922P317.5",
-            "description": "QQQ Apr 29 2022 317.5 Put",
-            "type": "VANILLA",
-            "putCall": "PUT",
-            "underlyingSymbol": "QQQ",
-        },
-        "marketValue": 102.0,
-        "maintenanceRequirement": 0.0,
-        "previousSessionLongQuantity": 0.0,
-    },
-    {
-        "shortQuantity": 0.0,
-        "averagePrice": 2.42,
-        "currentDayCost": 341.0,
-        "currentDayProfitLoss": -239.0,
-        "currentDayProfitLossPercentage": -70.09,
-        "longQuantity": 2.0,
-        "settledLongQuantity": 0.0,
-        "settledShortQuantity": 0.0,
-        "instrument": {
-            "assetType": "OPTION",
-            "cusip": "0QQQ..PT20317500",
-            "symbol": "QQQ_042922C317.5",
-            "description": "QQQ Apr 29 2022 317.5 Put",
-            "type": "VANILLA",
-            "putCall": "CALL",
-            "underlyingSymbol": "QQQ",
-        },
-        "marketValue": 102.0,
-        "maintenanceRequirement": 0.0,
-        "previousSessionLongQuantity": 0.0,
-    },
-    {
-        "shortQuantity": 0.0,
-        "averagePrice": 2.42,
-        "currentDayCost": 341.0,
-        "currentDayProfitLoss": -239.0,
-        "currentDayProfitLossPercentage": -70.09,
-        "longQuantity": 2.0,
-        "settledLongQuantity": 0.0,
-        "settledShortQuantity": 0.0,
-        "instrument": {
-            "assetType": "OPTION",
-            "cusip": "0QQQ..PT20317500",
-            "symbol": "TSLA_042922C317.5",
-            "description": "QQQ Apr 29 2022 317.5 Put",
-            "type": "VANILLA",
-            "putCall": "PUT",
-            "underlyingSymbol": "QQQ",
-        },
-        "marketValue": 102.0,
-        "maintenanceRequirement": 0.0,
-        "previousSessionLongQuantity": 0.0,
-    },
-    {
-        "shortQuantity": 0.0,
-        "averagePrice": 2.42,
-        "currentDayCost": 341.0,
-        "currentDayProfitLoss": -239.0,
-        "currentDayProfitLossPercentage": -70.09,
-        "longQuantity": 2.0,
-        "settledLongQuantity": 0.0,
-        "settledShortQuantity": 0.0,
-        "instrument": {
-            "assetType": "OPTION",
-            "cusip": "0QQQ..PT20317500",
-            "symbol": "MSFT_042922P317.5",
-            "description": "QQQ Apr 29 2022 317.5 Put",
-            "type": "VANILLA",
-            "putCall": "PUT",
-            "underlyingSymbol": "QQQ",
-        },
-        "marketValue": 102.0,
-        "maintenanceRequirement": 0.0,
-        "previousSessionLongQuantity": 0.0,
-    },
-]
+class TDClientTestCase(unittest.TestCase):
+    @parameterized.expand(
+        [
+            (-5, "SELL_TO_CLOSE"),
+            (-4, "SELL_TO_CLOSE"),
+            (-3, "SELL_TO_CLOSE"),
+            (-2, "SELL_TO_CLOSE"),
+            (-1, "SELL_TO_CLOSE"),
+            (0, "BUY_TO_OPEN"),
+            (1, "BUY_TO_OPEN"),
+            (2, "BUY_TO_OPEN"),
+            (3, "BUY_TO_OPEN"),
+            (4, "BUY_TO_OPEN"),
+            (5, "BUY_TO_OPEN"),
+        ]
+    )
+    def test_get_instruction(self, amount, expected_instruction):
+        output = TDClient._get_instruction(amount)
+        self.assertEqual(output, expected_instruction)
