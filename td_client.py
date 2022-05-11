@@ -53,7 +53,8 @@ class TDClient:
             raise TokenException("No access token, invalid credentials.")
         return access_token
 
-    def _build_option_body(self, symbol: str, quantity: int, instruction: str):
+    @staticmethod
+    def _build_option_body(symbol: str, quantity: int, instruction: str):
         body = TDEndpointData.BUY_OPTION_BODY
         first_order = body["orderLegCollection"][0]
         first_order["instrument"]["symbol"] = symbol
