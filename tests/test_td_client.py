@@ -36,3 +36,13 @@ class TDClientTestCase(unittest.TestCase):
     def test_get_instruction(self, amount, expected_instruction):
         output = TDClient._get_instruction(amount)
         self.assertEqual(output, expected_instruction)
+
+    @parameterized.expand(
+        [("XYZ", 1, "BUY_TO_OPEN"), (None, 0, "CHICKEN"), ("ABC", 2, "SELL_TO_CLOSE")]
+    )
+    def test_build_option_body(self, symbol, amount, instruction):
+        body = TDClient._build_option_body(symbol, amount, instruction)
+        order = body["orderLegCollection"][0]
+        self.assertEqual(order["instruction"], instruction)
+        self.assertEqual(order["quantity"], amount)
+        self.assertEqual(order["instrument"]["symbol"], symbol)
