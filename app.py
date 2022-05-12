@@ -1,7 +1,14 @@
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
-from td_client import TDClient, TDCreds, TokenException
+from td_client import (
+    TDClient,
+    TDCreds,
+    TokenException,
+    ACCOUNT_ID,
+    CONSUMER_KEY,
+    REFRESH_TOKEN,
+)
 import logging
 import datetime
 
@@ -24,7 +31,7 @@ CREDS = None
 
 @app.route("/")
 def index():
-    if CREDS:
+    if CREDS or all([ACCOUNT_ID, CONSUMER_KEY, REFRESH_TOKEN]):
         return render_template("index.html")
     else:
         response = request.args.get("response", "")
