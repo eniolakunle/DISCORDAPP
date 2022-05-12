@@ -60,9 +60,9 @@ class TDClient:
         first_order["instrument"]["symbol"] = symbol
         first_order["quantity"] = quantity
         first_order["instruction"] = instruction
-        logging.info(
-            f"Instruction: {instruction}, Quantity: {quantity}, OPTION BODY: {body}"
-        )
+        logging.info(f"Instruction: {instruction}")
+        logging.info(f"Quantity: {quantity}")
+        logging.info(f"OPTION BODY: {body}")
         return body
 
     def _place_option_order(
@@ -105,7 +105,10 @@ class TDClient:
         else:
             raise NotImplementedError(f"Boy implement that: {type}")
         try:
-            return self._check_response(r)
+            r = self._check_response(r)
+            logging.info(f"Link: {link}")
+            logging.info(f"Kwargs: {kwargs}")
+            return r
         except HTTPError as e:
             error = self._get_error_message(e)
             raise _exec(error)
