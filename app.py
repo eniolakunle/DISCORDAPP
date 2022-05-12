@@ -16,31 +16,40 @@ logging.basicConfig(
 CREDS = None
 
 
+# @app.route("/")
+# def creds():
+#     response = request.args.get("response", "")
+#     return render_template("creds.html", response=response)
+
+
 @app.route("/")
-def creds():
-    response = request.args.get("response")
-    return render_template("creds.html", response=response)
-
-
-@app.route("/home")
 def index():
-    return render_template("index.html")
+    if CREDS:
+        return render_template("index.html")
+    else:
+        response = request.args.get("response", "")
+        return render_template("creds.html", response=response)
 
 
 @app.route("/creds", methods=["POST"])
 def _check_creds():
-    if request.method == "POST":
-        account_id = int(request.args.get("account_id"))
-        consumer_key = request.args.get("consumer_key")
-        refresh_token = request.args.get("refresh_token")
-        try:
-            creds = TDCreds(account_id, consumer_key, refresh_token)
-            global CREDS
-            CREDS = creds
-            return redirect(url_for("index"))
+    try:
+        if request.method == "POST":
+            account_id = int(request.form.get("account_id"))
+            consumer_key = request.form.get("consumer_key")
+            refresh_token = request.form.get("refresh_token")
+            try:
+                creds = TDCreds(account_id, consumer_key, refresh_token)
+                global CREDS
+                CREDS = creds
+                url = url_for("index")
 
-        except TokenException as e:
-            return redirect(url_for("creds", response=f"{e}"))
+            except TokenException as e:
+                url = url_for("index", response=f"{e}")
+    except Exception as e:
+        url = url_for("index", response=f"Invalid entry.")
+
+    return redirect(url)
 
 
 @app.route("/results")
@@ -135,7 +144,7 @@ def _get_parsed_text_and_amount(discord_text: str):
 
 
 def _place_order(parsed_text: str, amount: int):
-    client = TDClient()
+    client = TDClient(CREDS)
     response = client.place_order(parsed_text, amount)
     logging.info(f"RESPONSE: {response}")
     return response
