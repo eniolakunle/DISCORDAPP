@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
-from td_client import TDClient, TokenException
+from td_client import TDClient, TDCreds, TokenException
 import logging
 import datetime
 
@@ -13,11 +13,34 @@ logging.basicConfig(
     encoding="utf-8",
     level=logging.INFO,
 )
+CREDS = None
 
 
 @app.route("/")
+def creds():
+    response = request.args.get("response")
+    return render_template("creds.html", response=response)
+
+
+@app.route("/home")
 def index():
     return render_template("index.html")
+
+
+@app.route("/creds", methods=["POST"])
+def _check_creds():
+    if request.method == "POST":
+        account_id = int(request.args.get("account_id"))
+        consumer_key = request.args.get("consumer_key")
+        refresh_token = request.args.get("refresh_token")
+        try:
+            creds = TDCreds(account_id, consumer_key, refresh_token)
+            global CREDS
+            CREDS = creds
+            return redirect(url_for("index"))
+
+        except TokenException as e:
+            return redirect(url_for("creds", response=f"{e}"))
 
 
 @app.route("/results")
