@@ -1,3 +1,4 @@
+from typing import Callable
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
@@ -11,6 +12,7 @@ from td_client import (
 )
 import logging
 import datetime
+from functools import wraps
 
 app = Flask(__name__)
 parser = DiscordParser()
@@ -21,21 +23,38 @@ logging.basicConfig(
     level=logging.INFO,
 )
 CREDS = None
+IS_DEV = False
 
 
-# @app.route("/")
-# def creds():
-#     response = request.args.get("response", "")
-#     return render_template("creds.html", response=response)
+def check_credentials(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if CREDS or IS_DEV:
+            return f(*args, **kwargs)
+        else:
+            return render_template("creds.html", response="Please login.")
+
+    return wrapper
 
 
 @app.route("/")
 def index():
-    if CREDS or all([ACCOUNT_ID, CONSUMER_KEY, REFRESH_TOKEN]):
-        return render_template("index.html")
+    if CREDS:
+        return render_template(_get_index())
     else:
         response = request.args.get("response", "")
         return render_template("creds.html", response=response)
+
+
+@app.route("/logout")
+def logout():
+    global CREDS
+    global IS_DEV
+    if CREDS:
+        CREDS = None
+    if IS_DEV:
+        IS_DEV = False
+    return render_template("creds.html", response="Logged Out.")
 
 
 @app.route("/creds", methods=["POST"])
@@ -59,14 +78,37 @@ def _check_creds():
     return redirect(url)
 
 
+@app.route("/dev_login")
+def _dev_login():
+    if _is_dev():
+        global IS_DEV
+        IS_DEV = True
+        return render_template(_get_index())
+    url = url_for("index", response="U R Not Dev")
+    return redirect(url)
+
+
+def _is_dev():
+    try:
+        TDCreds(
+            account_id=ACCOUNT_ID,
+            consumer_key=CONSUMER_KEY,
+            refresh_token=REFRESH_TOKEN,
+        )
+        return True
+    except TokenException:
+        return False
+
+
 @app.route("/results")
+@check_credentials
 def return_results():
     discord_text = request.args.get("discord_text")
     response = request.args.get("response")
     parsed_text = request.args.get("parsed_text")
     return make_response(
         render_template(
-            "index.html",
+            _get_index(),
             input_text=discord_text,
             parsed_text=parsed_text,
             response=response,
@@ -76,12 +118,13 @@ def return_results():
 
 
 @app.route("/invalid")
+@check_credentials
 def invalid_results():
     discord_text = request.args.get("discord_text")
     response = request.args.get("response")
     return make_response(
         render_template(
-            "index.html",
+            _get_index(),
             input_text=discord_text,
             response=response,
         ),
@@ -90,6 +133,7 @@ def invalid_results():
 
 
 @app.route("/submit")
+@check_credentials
 def get_discord_text():
     discord_text = str(escape(request.args.get("discord_text", "")))
 
@@ -138,6 +182,11 @@ def _return_url(parsed_text: str, amount: int, discord_text):
             response="Invalid Symbol",
         )
     return url
+
+
+def _get_index():
+    global IS_DEV
+    return "dev_index.html" if IS_DEV else "index.html"
 
 
 def _get_parsed_text_and_amount(discord_text: str):

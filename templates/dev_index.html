@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Discord Options</title>
+    <title>Discord Options (DEV)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link
@@ -11,7 +11,7 @@
   </head>
 
   <body>
-    <input type="button" onClick="parent.location='/'" value="Home" />
+    <input type="button" onClick="parent.location='/dev_login'" value="Home" />
     <form action="submit" method="get">
       <div>
         <p>{{input_text}}</p>
@@ -29,6 +29,7 @@
 
         <p>{{response}}</p>
       </div>
+      <img id="hammer" src="{{url_for('static', filename='hammer.png')}}" />
     </form>
     <input type="button" onClick="parent.location='/logout'" value="Logout" />
   </body>
