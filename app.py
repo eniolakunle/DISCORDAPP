@@ -1,4 +1,3 @@
-from typing import Callable
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
@@ -16,14 +15,16 @@ from functools import wraps
 
 app = Flask(__name__)
 parser = DiscordParser()
+
 TODAY = datetime.date.today()
+CREDS = None
+IS_DEV = False
+
 logging.basicConfig(
     filename=f"logs/mainapp_{TODAY}.log",
     encoding="utf-8",
     level=logging.INFO,
 )
-CREDS = None
-IS_DEV = False
 
 
 def check_credentials(f):
@@ -35,26 +36,6 @@ def check_credentials(f):
             return render_template("creds.html", response="Please login.")
 
     return wrapper
-
-
-@app.route("/")
-def index():
-    if CREDS:
-        return render_template(_get_index())
-    else:
-        response = request.args.get("response", "")
-        return render_template("creds.html", response=response)
-
-
-@app.route("/logout")
-def logout():
-    global CREDS
-    global IS_DEV
-    if CREDS:
-        CREDS = None
-    if IS_DEV:
-        IS_DEV = False
-    return render_template("creds.html", response="Logged Out.")
 
 
 @app.route("/creds", methods=["POST"])
@@ -88,16 +69,24 @@ def _dev_login():
     return redirect(url)
 
 
-def _is_dev():
-    try:
-        TDCreds(
-            account_id=ACCOUNT_ID,
-            consumer_key=CONSUMER_KEY,
-            refresh_token=REFRESH_TOKEN,
-        )
-        return True
-    except TokenException:
-        return False
+@app.route("/")
+def index():
+    if CREDS:
+        return render_template(_get_index())
+    else:
+        response = request.args.get("response", "")
+        return render_template("creds.html", response=response)
+
+
+@app.route("/logout")
+def logout():
+    global CREDS
+    global IS_DEV
+    if CREDS:
+        CREDS = None
+    if IS_DEV:
+        IS_DEV = False
+    return render_template("creds.html", response="Logged Out.")
 
 
 @app.route("/results")
@@ -182,6 +171,18 @@ def _return_url(parsed_text: str, amount: int, discord_text):
             response="Invalid Symbol",
         )
     return url
+
+
+def _is_dev():
+    try:
+        TDCreds(
+            account_id=ACCOUNT_ID,
+            consumer_key=CONSUMER_KEY,
+            refresh_token=REFRESH_TOKEN,
+        )
+        return True
+    except TokenException:
+        return False
 
 
 def _get_index():
