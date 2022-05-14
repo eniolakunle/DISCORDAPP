@@ -8,6 +8,7 @@ from td_endpoints import *
 
 ACCOUNT_ID = 253873290
 CONSUMER_KEY = "GIGBDGR7AKWXVZV3JGGLJ9AAHS1U5AWO"
+REFRESH_TOKEN = TDEndpointData.TD_TOKEN.get("refresh_token")
 
 
 class GetException(Exception):
@@ -22,10 +23,19 @@ class TokenException(Exception):
     pass
 
 
+class TDCreds:
+    def __init__(self, account_id: int, consumer_key: str, refresh_token: str):
+        self.account_id = account_id
+        self.consumer_key = consumer_key
+        self.refresh_token = refresh_token
+        access_token = TDClient._get_access_token(self)
+
+
 class TDClient:
-    def __init__(self):
-        self.access_token = self._get_access_token()
+    def __init__(self, creds_object: TDCreds = None):
+        self.access_token = self._get_access_token(creds_object)
         self.header = {"Authorization": f"Bearer {self.access_token}"}
+        self.account_id = creds_object.account_id if creds_object else ACCOUNT_ID
 
     def _get_error_message(self, e: HTTPError):
         error = bytes.decode(e.response.content)
@@ -41,11 +51,15 @@ class TDClient:
         except HTTPError:
             raise
 
-    def _get_access_token(self):
+    @staticmethod
+    def _get_access_token(creds_object: TDCreds = None):
+        refresh_token = creds_object.refresh_token if creds_object else REFRESH_TOKEN
+        consumer_key = creds_object.consumer_key if creds_object else CONSUMER_KEY
+
         data = {
             "grant_type": "refresh_token",
-            "refresh_token": TDEndpointData.TD_TOKEN.get("refresh_token"),
-            "client_id": CONSUMER_KEY,
+            "refresh_token": refresh_token,
+            "client_id": consumer_key,
         }
         r = requests.post(TDEndpointData.GET_TOKEN, data=data)
         access_token = r.json().get("access_token")
@@ -60,6 +74,7 @@ class TDClient:
         first_order["instrument"]["symbol"] = symbol
         first_order["quantity"] = quantity
         first_order["instruction"] = instruction
+
         logging.info(f"Instruction: {instruction}")
         logging.info(f"Quantity: {quantity}")
         logging.info(f"OPTION BODY: {body}")
@@ -69,7 +84,7 @@ class TDClient:
         self, symbol: str, quantity: int, instruction: str
     ) -> Tuple[str, HTTPStatus]:
         body = self._build_option_body(symbol, quantity, instruction)
-        link = TDEndpointData.PLACE_ORDER.format(accountID=ACCOUNT_ID)
+        link = TDEndpointData.PLACE_ORDER.format(accountID=self.account_id)
         try:
             r = self._send_post(link, json=body)
             return (
@@ -124,7 +139,9 @@ class TDClient:
         return "SELL_TO_CLOSE" if quantity < 0 else "BUY_TO_OPEN"
 
     def get_transactions(self) -> dict:
-        r = self._send_get(TDEndpointData.GET_TRANSACTIONS.format(accountID=ACCOUNT_ID))
+        r = self._send_get(
+            TDEndpointData.GET_TRANSACTIONS.format(accountID=self.account_id)
+        )
         json_response = r.json()
         if json_response:
             return json_response
@@ -134,7 +151,7 @@ class TDClient:
     def _get_account_info(self, type: str) -> Union[dict, list]:
         params = {"fields": type}
         r = self._send_get(
-            TDEndpointData.GET_ACCOUNTS.format(accountID=ACCOUNT_ID),
+            TDEndpointData.GET_ACCOUNTS.format(accountID=self.account_id),
             params=params,
         )
         account = r.json().get("securitiesAccount")

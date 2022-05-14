@@ -1,13 +1,25 @@
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
-from td_client import TDClient, TokenException
+from td_client import (
+    TDClient,
+    TDCreds,
+    TokenException,
+    ACCOUNT_ID,
+    CONSUMER_KEY,
+    REFRESH_TOKEN,
+)
 import logging
 import datetime
+from functools import wraps
 
 app = Flask(__name__)
 parser = DiscordParser()
+
 TODAY = datetime.date.today()
+CREDS = None
+IS_DEV = False
+
 logging.basicConfig(
     filename=f"logs/mainapp_{TODAY}.log",
     encoding="utf-8",
@@ -15,19 +27,77 @@ logging.basicConfig(
 )
 
 
+def check_credentials(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if CREDS or IS_DEV:
+            return f(*args, **kwargs)
+        else:
+            return render_template("creds.html", response="Please login.")
+
+    return wrapper
+
+
+@app.route("/creds", methods=["POST"])
+def _check_creds():
+    try:
+        if request.method == "POST":
+            account_id = int(request.form.get("account_id"))
+            consumer_key = request.form.get("consumer_key")
+            refresh_token = request.form.get("refresh_token")
+            try:
+                creds = TDCreds(account_id, consumer_key, refresh_token)
+                global CREDS
+                CREDS = creds
+                url = url_for("index")
+
+            except TokenException as e:
+                url = url_for("index", response=f"{e}")
+    except Exception as e:
+        url = url_for("index", response=f"Invalid entry.")
+
+    return redirect(url)
+
+
+@app.route("/dev_login")
+def _dev_login():
+    if _is_dev():
+        global IS_DEV
+        IS_DEV = True
+        return render_template(_get_index())
+    url = url_for("index", response="U R Not Dev")
+    return redirect(url)
+
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if CREDS:
+        return render_template(_get_index())
+    else:
+        response = request.args.get("response", "")
+        return render_template("creds.html", response=response)
+
+
+@app.route("/logout")
+def logout():
+    global CREDS
+    global IS_DEV
+    if CREDS:
+        CREDS = None
+    if IS_DEV:
+        IS_DEV = False
+    return render_template("creds.html", response="Logged Out.")
 
 
 @app.route("/results")
+@check_credentials
 def return_results():
     discord_text = request.args.get("discord_text")
     response = request.args.get("response")
     parsed_text = request.args.get("parsed_text")
     return make_response(
         render_template(
-            "index.html",
+            _get_index(),
             input_text=discord_text,
             parsed_text=parsed_text,
             response=response,
@@ -37,12 +107,13 @@ def return_results():
 
 
 @app.route("/invalid")
+@check_credentials
 def invalid_results():
     discord_text = request.args.get("discord_text")
     response = request.args.get("response")
     return make_response(
         render_template(
-            "index.html",
+            _get_index(),
             input_text=discord_text,
             response=response,
         ),
@@ -51,6 +122,7 @@ def invalid_results():
 
 
 @app.route("/submit")
+@check_credentials
 def get_discord_text():
     discord_text = str(escape(request.args.get("discord_text", "")))
 
@@ -101,6 +173,23 @@ def _return_url(parsed_text: str, amount: int, discord_text):
     return url
 
 
+def _is_dev():
+    try:
+        TDCreds(
+            account_id=ACCOUNT_ID,
+            consumer_key=CONSUMER_KEY,
+            refresh_token=REFRESH_TOKEN,
+        )
+        return True
+    except TokenException:
+        return False
+
+
+def _get_index():
+    global IS_DEV
+    return "dev_index.html" if IS_DEV else "index.html"
+
+
 def _get_parsed_text_and_amount(discord_text: str):
     parsed_text, amount = (
         parser.parse(discord_text) if discord_text.strip() else (None, None)
@@ -112,7 +201,7 @@ def _get_parsed_text_and_amount(discord_text: str):
 
 
 def _place_order(parsed_text: str, amount: int):
-    client = TDClient()
+    client = TDClient(CREDS)
     response = client.place_order(parsed_text, amount)
     logging.info(f"RESPONSE: {response}")
     return response
