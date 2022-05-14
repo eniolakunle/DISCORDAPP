@@ -1,7 +1,6 @@
 from http import HTTPStatus
 import json
 import logging
-from tokenize import Token
 from typing import Tuple, Union
 import requests
 from requests.exceptions import HTTPError
