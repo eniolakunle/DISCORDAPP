@@ -52,7 +52,7 @@ class TDClient:
             raise
 
     @staticmethod
-    def _get_access_token(creds_object: TDCreds):
+    def _get_access_token(creds_object: TDCreds = None):
         refresh_token = creds_object.refresh_token if creds_object else REFRESH_TOKEN
         consumer_key = creds_object.consumer_key if creds_object else CONSUMER_KEY
 
