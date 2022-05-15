@@ -183,6 +183,7 @@ class TDClient:
                 response = self._place_option_order(
                     symbol, quantity=quantity, instruction=instruction
                 )
+                logging.info(f"RESPONSE: {response}")
                 return response
             else:
                 raise GetException("Symbol Not Found")

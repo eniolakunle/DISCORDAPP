@@ -200,7 +200,6 @@ def _get_parsed_text_and_amount(discord_text: str):
 def _place_order(parsed_text: str, amount: int):
     client = TDClient(CREDS)
     response = client.place_order(parsed_text, amount)
-    logging.info(f"RESPONSE: {response}")
     return response
 
 
