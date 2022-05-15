@@ -1,3 +1,4 @@
+from copy import deepcopy
 from http import HTTPStatus
 import json
 import logging
@@ -69,7 +70,7 @@ class TDClient:
 
     @staticmethod
     def _build_option_body(symbol: str, quantity: int, instruction: str):
-        body = TDEndpointData.BUY_OPTION_BODY
+        body = deepcopy(TDEndpointData.BUY_OPTION_BODY)
         first_order = body["orderLegCollection"][0]
         first_order["instrument"]["symbol"] = symbol
         first_order["quantity"] = quantity
