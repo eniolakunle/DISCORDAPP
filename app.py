@@ -194,9 +194,6 @@ def _get_parsed_text_and_amount(discord_text: str):
     parsed_text, amount = (
         parser.parse(discord_text) if discord_text.strip() else (None, None)
     )
-
-    logging.info(f"PARSED: {parsed_text}")
-    logging.info(f"AMOUNT: {amount}")
     return parsed_text, amount
 
 
