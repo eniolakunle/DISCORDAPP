@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Union
 
-from td_client import TDClient
+from clients.td_client import TDClient
 
 import re
 

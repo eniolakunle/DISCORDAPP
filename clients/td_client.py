@@ -4,26 +4,15 @@ import logging
 from typing import Tuple, Union
 import requests
 from requests.exceptions import HTTPError
-from td_endpoints import *
+from endpoints.td_endpoints import TDEndpointData
+from .base_client import *
 
 ACCOUNT_ID = 253873290
 CONSUMER_KEY = "GIGBDGR7AKWXVZV3JGGLJ9AAHS1U5AWO"
 REFRESH_TOKEN = TDEndpointData.TD_TOKEN.get("refresh_token")
 
 
-class GetException(Exception):
-    pass
-
-
-class PostException(Exception):
-    pass
-
-
-class TokenException(Exception):
-    pass
-
-
-class TDCreds:
+class TDCreds(BaseCreds):
     def __init__(self, account_id: int, consumer_key: str, refresh_token: str):
         self.account_id = account_id
         self.consumer_key = consumer_key
@@ -31,7 +20,7 @@ class TDCreds:
         access_token = TDClient._get_access_token(self)
 
 
-class TDClient:
+class TDClient(BaseClient):
     def __init__(self, creds_object: TDCreds = None):
         self.access_token = self._get_access_token(creds_object)
         self.header = {"Authorization": f"Bearer {self.access_token}"}
@@ -68,7 +57,7 @@ class TDClient:
         return access_token
 
     @staticmethod
-    def _build_option_body(symbol: str, quantity: int, instruction: str):
+    def _build_order_body(symbol: str, quantity: int, instruction: str):
         body = TDEndpointData.BUY_OPTION_BODY
         first_order = body["orderLegCollection"][0]
         first_order["instrument"]["symbol"] = symbol
@@ -83,7 +72,7 @@ class TDClient:
     def _place_option_order(
         self, symbol: str, quantity: int, instruction: str
     ) -> Tuple[str, HTTPStatus]:
-        body = self._build_option_body(symbol, quantity, instruction)
+        body = self._build_order_body(symbol, quantity, instruction)
         link = TDEndpointData.PLACE_ORDER.format(accountID=self.account_id)
         try:
             r = self._send_post(link, json=body)
