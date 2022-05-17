@@ -44,16 +44,16 @@ class BaseClient:
         raise NotImplementedError("_get_access_token not implemented")
 
     @staticmethod
-    def _build_order_body(symbol: str, quantity: int, instruction: str):
+    def _build_order_body():
         raise NotImplementedError("_build_order_body not implemented")
 
     def get_transactions(self):
         raise NotImplementedError("get_transactions not implemented")
 
-    def get_symbol_quote(self, symbol: str):
+    def get_symbol_quote(self):
         raise NotImplementedError("get_symbol_quote not implemented")
 
-    def place_order(self, symbol, quantity: int):
+    def place_order(self):
         raise NotImplementedError("place_order not implemented")
 
     def get_orders(self):
