@@ -61,8 +61,7 @@ def _check_creds():
 def _dev_login():
     set_client()
     if _is_dev():
-        global IS_DEV
-        IS_DEV = True
+        set_dev()
         return render_template(_get_index())
     url = url_for("index", response="U R Not Dev")
     return redirect(url)
@@ -191,6 +190,11 @@ def _is_dev():
 def set_client():
     global CURRENT_CLIENT
     CURRENT_CLIENT = request.form.get("client") or Clients.TD.value
+
+
+def set_dev():
+    global IS_DEV
+    IS_DEV = True
 
 
 def _get_index():
