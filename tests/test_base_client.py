@@ -16,7 +16,7 @@ class BaseCredsTestCase(unittest.TestCase):
         ]
     )
     def test_get_client(self, creds_name, expected_creds):
-        creds = BaseCreds.get_creds(creds_name)
+        creds = BaseCreds.get_creds_object(creds_name)
         self.assertIs(creds, expected_creds)
         self.assertTrue(issubclass(creds, TDCreds))
 
@@ -29,7 +29,7 @@ class BaseCredsTestCase(unittest.TestCase):
     )
     def test_get_client_expected_not_implemented(self, creds_name):
         with self.assertRaises(NotImplementedError):
-            BaseCreds.get_creds(creds_name)
+            BaseCreds.get_creds_object(creds_name)
 
 
 class BaseClientTestCase(unittest.TestCase):

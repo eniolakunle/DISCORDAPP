@@ -22,7 +22,7 @@ class BaseCreds:
         raise NotImplementedError("Creds not implemented")
 
     @staticmethod
-    def get_creds(client_name: str):
+    def get_creds_object(client_name: str):
         from .td_client import TDCreds
 
         CLASS_MAP = {Clients.TD.value: TDCreds}

@@ -11,7 +11,7 @@
   </head>
 
   <body>
-    <form action="creds" method="post">
+    <form action="creds" method="post" id="creds-form">
       <div>
         <input type="text" name="account_id" placeholder="255877299" />
         <input
@@ -28,12 +28,19 @@
       </div>
 
       <p>{{response}}</p>
+
+      <div>
+        <select name="client" id="cars">
+          {% for client in client_list %}
+          <option value="{{ client.value }}" selected>
+            {{ client.value }}
+          </option>
+          {% endfor %}
+        </select>
+      </div>
     </form>
-    <input
-      type="button"
-      id="dev"
-      onClick="parent.location='/dev_login'"
-      value="Dev Login"
-    />
+    <button type="submit" id="dev" onClick="parent.location='/dev_login'">
+      Dev Login
+    </button>
   </body>
 </html>
