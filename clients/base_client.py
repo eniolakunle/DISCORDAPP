@@ -1,3 +1,10 @@
+from enum import Enum
+
+
+class Clients(Enum):
+    TD = "TD Ameritrade"
+
+
 class GetException(Exception):
     pass
 
@@ -18,7 +25,7 @@ class BaseCreds:
     def get_creds(client_name: str):
         from .td_client import TDCreds
 
-        CLASS_MAP = {"TD Ameritrade": TDCreds}
+        CLASS_MAP = {Clients.TD.value: TDCreds}
         client = CLASS_MAP.get(client_name, None)
         if client:
             return client
@@ -33,7 +40,7 @@ class BaseClient:
     def get_client(client_name: str):
         from .td_client import TDClient
 
-        CLASS_MAP = {"TD Ameritrade": TDClient}
+        CLASS_MAP = {Clients.TD.value: TDClient}
         client = CLASS_MAP.get(client_name, None)
         if client:
             return client
@@ -64,6 +71,7 @@ class BaseClient:
 
 
 def main():
+    n = 1
     pass
 
 

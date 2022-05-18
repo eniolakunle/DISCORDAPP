@@ -5,14 +5,14 @@ import os
 
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.insert(0, parentdir)
-from clients.base_client import BaseClient, BaseCreds
+from clients.base_client import BaseClient, BaseCreds, Clients
 from clients.td_client import TDClient, TDCreds
 
 
 class BaseCredsTestCase(unittest.TestCase):
     @parameterized.expand(
         [
-            ("TD Ameritrade", TDCreds),
+            (Clients.TD.value, TDCreds),
         ]
     )
     def test_get_client(self, creds_name, expected_creds):
@@ -35,7 +35,7 @@ class BaseCredsTestCase(unittest.TestCase):
 class BaseClientTestCase(unittest.TestCase):
     @parameterized.expand(
         [
-            ("TD Ameritrade", TDClient),
+            (Clients.TD.value, TDClient),
         ]
     )
     def test_get_client(self, client_name, expected_client):

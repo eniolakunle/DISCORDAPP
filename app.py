@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
-from clients.base_client import BaseClient, BaseCreds, TokenException
+from clients.base_client import BaseClient, BaseCreds, TokenException, Clients
 import logging
 import datetime
 from functools import wraps
@@ -12,7 +12,7 @@ parser = DiscordParser()
 TODAY = datetime.date.today()
 CREDS = None
 IS_DEV = False
-CURRENT_CLIENT = "TD Ameritrade"
+CURRENT_CLIENT = Clients.TD.value
 
 logging.basicConfig(
     filename=f"logs/mainapp_{TODAY}.log",
