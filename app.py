@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
-from clients.base_client import BaseClient, BaseCreds, TokenException
+from clients.base_client import BaseClient, BaseCreds, TokenException, Clients
 import logging
 import datetime
 from functools import wraps
@@ -12,7 +12,7 @@ parser = DiscordParser()
 TODAY = datetime.date.today()
 CREDS = None
 IS_DEV = False
-CURRENT_CLIENT = "TD Ameritrade"
+CURRENT_CLIENT = None
 
 logging.basicConfig(
     filename=f"logs/mainapp_{TODAY}.log",
@@ -27,7 +27,9 @@ def check_credentials(f):
         if CREDS or IS_DEV:
             return f(*args, **kwargs)
         else:
-            return render_template("creds.html", response="Please login.")
+            return render_template(
+                "creds.html", response="Please login.", client_list=list(Clients)
+            )
 
     return wrapper
 
@@ -39,8 +41,9 @@ def _check_creds():
             account_id = int(request.form.get("account_id"))
             consumer_key = request.form.get("consumer_key")
             refresh_token = request.form.get("refresh_token")
+            set_client()
             try:
-                cred_object = BaseCreds.get_creds(CURRENT_CLIENT)
+                cred_object = BaseCreds.get_creds_object(CURRENT_CLIENT)
                 creds = cred_object(account_id, consumer_key, refresh_token)
                 global CREDS
                 CREDS = creds
@@ -56,9 +59,9 @@ def _check_creds():
 
 @app.route("/dev_login")
 def _dev_login():
+    set_client()
     if _is_dev():
-        global IS_DEV
-        IS_DEV = True
+        set_dev()
         return render_template(_get_index())
     url = url_for("index", response="U R Not Dev")
     return redirect(url)
@@ -70,18 +73,25 @@ def index():
         return render_template(_get_index())
     else:
         response = request.args.get("response", "")
-        return render_template("creds.html", response=response)
+        return render_template(
+            "creds.html", response=response, client_list=list(Clients)
+        )
 
 
 @app.route("/logout")
 def logout():
     global CREDS
     global IS_DEV
+    global CURRENT_CLIENT
     if CREDS:
         CREDS = None
     if IS_DEV:
         IS_DEV = False
-    return render_template("creds.html", response="Logged Out.")
+    if CURRENT_CLIENT:
+        CURRENT_CLIENT = None
+    return render_template(
+        "creds.html", response="Logged Out.", client_list=list(Clients)
+    )
 
 
 @app.route("/results")
@@ -175,6 +185,16 @@ def _is_dev():
         return True
     except TokenException:
         return False
+
+
+def set_client():
+    global CURRENT_CLIENT
+    CURRENT_CLIENT = request.form.get("client") or Clients.TD.value
+
+
+def set_dev():
+    global IS_DEV
+    IS_DEV = True
 
 
 def _get_index():
