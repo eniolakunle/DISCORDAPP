@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Union
 import logging
 
-from td_client import TDClient
+from clients.td_client import TDClient
 
 import re
 

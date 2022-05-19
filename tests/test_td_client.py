@@ -6,7 +6,7 @@ import os
 
 parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.insert(0, parentdir)
-from td_client import TDClient
+from clients.td_client import TDClient
 
 
 class MockTDClient:
@@ -40,8 +40,8 @@ class TDClientTestCase(unittest.TestCase):
     @parameterized.expand(
         [("XYZ", 1, "BUY_TO_OPEN"), (None, 0, "CHICKEN"), ("ABC", 2, "SELL_TO_CLOSE")]
     )
-    def test_build_option_body(self, symbol, amount, instruction):
-        body = TDClient._build_option_body(symbol, amount, instruction)
+    def test_build_order_body(self, symbol, amount, instruction):
+        body = TDClient._build_order_body(symbol, amount, instruction)
         order = body["orderLegCollection"][0]
         self.assertEqual(order["instruction"], instruction)
         self.assertEqual(order["quantity"], amount)
@@ -90,3 +90,7 @@ class TDClientTestCase(unittest.TestCase):
     def test_validate_option_quote(self, quote, result):
         output = TDClient._validate_option_quote(quote)
         self.assertEqual(output, result)
+
+
+if __name__ == "__main__":
+    unittest.main()
