@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Union
+import logging
 
 from clients.td_client import TDClient
 
@@ -167,6 +168,8 @@ class DiscordParser:
     def parse(self, string_to_parse: str) -> tuple:
         # Buy position returns str and postive quantity, sell returns string and negative quantity
         valid_string, amount = self.run_checks(string_to_parse)
+        logging.info(f"PARSED: {valid_string}")
+        logging.info(f"AMOUNT: {amount}")
         return valid_string, amount  # XYZ_032015C49
 
 
