@@ -1,4 +1,4 @@
-from ..fixtures import TD_MOCK_POSITIONS
+from .fixtures import TD_MOCK_POSITIONS
 from parameterized import parameterized
 import unittest
 
