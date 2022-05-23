@@ -1,6 +1,6 @@
-logs/
 __pycache__/
 DISCORDAPP/
 test/__pycache__/
 venv/
 .pytest_cache/
+*.log
