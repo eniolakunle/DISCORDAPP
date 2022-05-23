@@ -2,5 +2,5 @@ logs/
 __pycache__/
 DISCORDAPP/
 test/__pycache__/
-virt/
+venv/
 .pytest_cache/
