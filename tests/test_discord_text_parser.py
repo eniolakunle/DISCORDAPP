@@ -3,11 +3,6 @@ from datetime import datetime
 from unittest.mock import patch
 from parameterized import parameterized
 from .clients.test_td_client import MockTDClient
-
-import os
-
-parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.sys.path.insert(0, parentdir)
 from discord_text_parser import DiscordParser, ParseException
 
 
