@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 from unittest.mock import patch
 from parameterized import parameterized
-from .test_td_client import MockTDClient
+from .clients.test_td_client import MockTDClient
 
 import os
 

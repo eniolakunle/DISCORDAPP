@@ -5,8 +5,12 @@ import logging
 from typing import Tuple, Union
 import requests
 from requests.exceptions import HTTPError
-from endpoints.td_endpoints import TDEndpointData
 from .base_client import *
+
+import os
+parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.sys.path.insert(0, parentdir)
+from endpoints.td_endpoints import TDEndpointData
 
 ACCOUNT_ID = 253873290
 CONSUMER_KEY = "GIGBDGR7AKWXVZV3JGGLJ9AAHS1U5AWO"
