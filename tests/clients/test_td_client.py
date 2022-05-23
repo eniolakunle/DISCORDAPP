@@ -6,10 +6,6 @@ import os
 
 from ...clients.td_client import TDClient
 
-parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.sys.path.insert(0, parentdir)
-# from clients.td_client import TDClient
-
 
 class MockTDClient:
     def __init__(self):
