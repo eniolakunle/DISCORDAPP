@@ -1,4 +1,3 @@
-from tkinter import CURRENT
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
