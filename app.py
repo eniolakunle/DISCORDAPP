@@ -242,13 +242,6 @@ def _get_positions():
         client = client(CREDS)
         positions = client.get_positions()
 
-        # # WILL REMOVE
-        # from tests.clients.fixtures import TD_MOCK_POSITIONS
-
-        # positions = TD_MOCK_POSITIONS
-
-        # # positions = client.get_positions()
-
         positions = [
             Position(
                 amount=position["longQuantity"], name=position["instrument"]["symbol"]
