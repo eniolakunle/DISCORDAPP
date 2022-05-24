@@ -147,8 +147,8 @@ def sell_chosen_position():
 
 @app.route("/submit")
 @check_credentials
-def get_discord_text(text:str = None):
-    discord_text = str(escape(request.args.get("discord_text", ""))) or text
+def get_discord_text():
+    discord_text = str(escape(request.args.get("discord_text", "")))
 
     try:
         parsed_text, amount = _get_parsed_text_and_amount(discord_text)
