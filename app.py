@@ -141,8 +141,8 @@ def sell_chosen_position():
     position = request.form.get("position_to_sell")
     if position:
         position = eval(position)
-        symbol, amount = position[0], -position[1]
-        url = _return_url(symbol, amount, "")
+        symbol, amount, description = position[0], -position[1], position[2]
+        url = _return_url(symbol, amount, description)
         return redirect(url)
 
 
