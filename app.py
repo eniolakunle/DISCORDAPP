@@ -1,3 +1,4 @@
+from tkinter import CURRENT
 from flask import Flask, render_template, request, escape
 from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
@@ -19,6 +20,12 @@ logging.basicConfig(
     encoding="utf-8",
     level=logging.INFO,
 )
+
+class Position:
+    def __init__(self, name: str, amount: int):
+        self.name = name
+        self.amount = amount
+
 
 
 def check_credentials(f):
@@ -62,7 +69,7 @@ def _dev_login():
     set_client()
     if _is_dev():
         set_dev()
-        return render_template(_get_index())
+        return render_template(_get_index(), current_positions=_get_positions())
     url = url_for("index", response="U R Not Dev")
     return redirect(url)
 
@@ -70,7 +77,7 @@ def _dev_login():
 @app.route("/")
 def index():
     if CREDS:
-        return render_template(_get_index())
+        return render_template(_get_index(), current_positions=_get_positions())
     else:
         response = request.args.get("response", "")
         return render_template(
@@ -106,6 +113,7 @@ def return_results():
             input_text=discord_text,
             parsed_text=parsed_text,
             response=response,
+            current_positions=_get_positions(),
         ),
         200,
     )
@@ -121,15 +129,27 @@ def invalid_results():
             _get_index(),
             input_text=discord_text,
             response=response,
+            current_positions=_get_positions(),
         ),
         400,
     )
 
 
+@app.route("/sell_position", methods=["POST"])
+@check_credentials
+def sell_chosen_position():
+    position = request.form.get("position_to_sell")
+    if position:
+        position = eval(position)
+        symbol, amount = position[0], -position[1]
+        url = _return_url(symbol, amount, "")
+        return redirect(url)
+
+
 @app.route("/submit")
 @check_credentials
-def get_discord_text():
-    discord_text = str(escape(request.args.get("discord_text", "")))
+def get_discord_text(text:str = None):
+    discord_text = str(escape(request.args.get("discord_text", ""))) or text
 
     try:
         parsed_text, amount = _get_parsed_text_and_amount(discord_text)
@@ -214,6 +234,29 @@ def _place_order(parsed_text: str, amount: int):
     client = client(CREDS)
     response = client.place_order(parsed_text, amount)
     return response
+
+
+def _get_positions():
+    positions = []
+    if CURRENT_CLIENT:
+        client = BaseClient.get_client(CURRENT_CLIENT)
+        client = client(CREDS)
+        positions = client.get_positions()
+
+        # # WILL REMOVE
+        # from tests.clients.fixtures import TD_MOCK_POSITIONS
+
+        # positions = TD_MOCK_POSITIONS
+
+        # # positions = client.get_positions()
+
+        positions = [
+            Position(
+                amount=position["longQuantity"], name=position["instrument"]["symbol"]
+            )
+            for position in positions
+        ]
+    return positions
 
 
 if __name__ == "__main__":

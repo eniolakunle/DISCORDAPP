@@ -12,6 +12,20 @@
 
   <body>
     <input type="button" onClick="parent.location='/dev_login'" value="Home" />
+
+    <form action="sell_position" , method="post">
+      <div id="positions">
+        <select name="position_to_sell">
+          {% for position in current_positions %}
+          <option value="{{ position.name, position.amount }}" selected>
+            {{ position.name }}
+          </option>
+          {% endfor %}
+        </select>
+        <input type="submit" value="Sell All" />
+      </div>
+    </form>
+
     <form action="submit" method="get">
       <div>
         <p>{{input_text}}</p>

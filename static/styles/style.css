@@ -16,10 +16,20 @@ form {
 }
 
 p,
-div{
+div,
+#positions{
   text-align: center;
 }
 
+#positions{
+  display: flex;
+  justify-content: center;
+  /* align horizontal */
+  align-items: center;
+  height: 33%;
+  /* align vertical */
+  flex-direction: column;
+}
 img, select {
   margin-top: 20%;
   margin-left: auto;

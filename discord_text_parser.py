@@ -73,20 +73,24 @@ class DiscordParser:
             instrument = position.get("instrument")
             instrument["longQuantity"] = position.get("longQuantity")
             instruments.append(instrument)
+
         matches = [
             instrument
             for instrument in instruments
             if symbol_split[0].upper() in instrument.get("symbol")
         ]
+
         if matches and run_extra_verify:
             matches = [
                 instrument
                 for instrument in matches
                 if instrument.get("putCall") in symbol_split[1].upper()
             ]
+
         if len(matches) == 1:
             instrument = matches[0]
             return instrument.get("symbol"), instrument.get("longQuantity")
+
         raise ParseException("Couldn't find a matching order to sell")
 
     def _get_option_position(self, option_symbol: str) -> Union[str, tuple]:
