@@ -1,12 +1,7 @@
 import unittest
 from parameterized import parameterized
-
-import os
-
-parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-os.sys.path.insert(0, parentdir)
-from clients.base_client import BaseClient, BaseCreds, Clients
-from clients.td_client import TDClient, TDCreds
+from ...clients.base_client import BaseClient, BaseCreds, Clients
+from ...clients.td_client import TDClient, TDCreds
 
 
 class BaseCredsTestCase(unittest.TestCase):
