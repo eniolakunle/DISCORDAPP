@@ -143,7 +143,13 @@ def sell_chosen_position():
         position = eval(position)
         symbol, amount, description = position[0], -position[1], position[2]
         url = _return_url(symbol, amount, description)
-        return redirect(url)
+
+    else:
+        url = url_for(
+            "invalid_results",
+            response="No positions to sell.",
+        )
+    return redirect(url)
 
 
 @app.route("/submit")
