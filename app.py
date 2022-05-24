@@ -21,9 +21,10 @@ logging.basicConfig(
 )
 
 class Position:
-    def __init__(self, name: str, amount: int):
+    def __init__(self, name: str, amount: int, description: str):
         self.name = name
         self.amount = amount
+        self.description = description
 
 
 
@@ -244,7 +245,8 @@ def _get_positions():
 
         positions = [
             Position(
-                amount=position["longQuantity"], name=position["instrument"]["symbol"]
+                amount=position["longQuantity"], name=position["instrument"]["symbol"],
+                description=position["instrument"]["description"]
             )
             for position in positions
         ]

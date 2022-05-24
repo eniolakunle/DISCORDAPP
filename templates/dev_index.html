@@ -18,7 +18,7 @@
         <select name="position_to_sell">
           {% for position in current_positions %}
           <option value="{{ position.name, position.amount }}" selected>
-            {{ position.name }}
+            {{ position.description }}
           </option>
           {% endfor %}
         </select>
