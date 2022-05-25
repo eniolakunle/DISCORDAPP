@@ -247,7 +247,10 @@ def _get_positions():
     if CURRENT_CLIENT:
         client = BaseClient.get_client(CURRENT_CLIENT)
         client = client(CREDS)
-        positions = client.get_positions()
+        try:
+            positions = client.get_positions()
+        except Exception:
+            return []
 
         positions = [
             Position(

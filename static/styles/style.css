@@ -38,13 +38,7 @@ img{
     max-height: 300px;
     margin: auto;
 }
-/* select {
-  margin-top: 20%;
-  margin-left: auto;
-  margin-right: auto;
-  height: auto;
-  width: auto;
-  max-width: 300px;
-  max-height: 300px;
-} */
+ select {
+   margin-bottom: 5%;
+ }
 
