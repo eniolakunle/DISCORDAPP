@@ -1,0 +1,11 @@
+version: '1'
+
+services:
+  discordapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: money
+
+    ports:
+    - "5000:5000"
