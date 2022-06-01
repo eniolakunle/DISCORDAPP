@@ -7,9 +7,6 @@ class TDEndpointData:
         "https://api.tdameritrade.com/v1/accounts/{accountID}/transactions"
     )
 
-    TD_TOKEN = {
-        "refresh_token": "hKY9X/QGcmmS2VnVP0FmZkrXMhp58At7X9ME8iw9ilVc/sh1PJ2M0/fmXawMqTA4sKNvTqBZU9Wl+H9iU6w+/79dowwpDDfgZUkzx/+WUYHWaJ6853Wz9E1MpYsgOR8VhsiomkFb9Yw9vPNJfGul3AixQtQVCHRMQRNXGGDS+EQaTeHSJANPpMQMHi8C5cIp4R788rAVmI+0LNQwa8XdtF+0j8YYhdEYUMNNR6i69aK4B3xZvybxIptReo7mzpTS1IZiagjUuHi5lYFBVissfnLjVYBQdfzHwklXzDbVlPp+/PCcPDCB/V9HagTMatJsJfGbXPKu7osHNnXON/wnWNx4B65BKbjO9CHNNq4pRI8pNXpZxAUSwp6sR5h4oD6m70KarrgaUQlR/dvCCBu8kJA013A+3BBG+3oIJOfvyWgJg24Tr/p1TVHPkv+100MQuG4LYrgoVi/JHHvlC3i9vTjsqQ48N9Z+SixwiLd6/xy96KebCRqCgu3li8Agt5lX12Tahp689cVeCzB55iJpp1vtQvAkSxMw9TvCjbOvPmfYsQwXneqbZUbrZmDt+1mc1Ohk7gSQ0Z0wj9w6rW40R1T9WcVp0rQPEYxbjyRs8cLnlVihH9l5haoiTgY9JBeZHmlpZe4B928crqqdzoxdst1j9t5cfhUi0vXRoA95KcH+Z86GtwYiqjRVAiRHdtMBhL+q2plEPibvzTWJt8f9RNZ3IZGgY3NjOv+hhrXfbzJ+9Y9bzEW1XGyMgg917ON6xkTthIMYbgyAYMY/YuCKIZIo2Oigh6v3sBg8pTurDN62IoRg390it4M2AKekXD7ZaDvtFjd3WzuAuG1ouEHD+Acy04TmaIgqmOTZmD0TvBkWRp177NqbyTw4KhmujZl0Ce2yU0PuyCU=212FD3x19z9sWBHDJACbC00B75E",
-    }
     BUY_OPTION_BODY = {
         "complexOrderStrategyType": "NONE",
         "orderType": "MARKET",

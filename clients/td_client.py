@@ -12,9 +12,9 @@ parentdir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.sys.path.insert(0, parentdir)
 from endpoints.td_endpoints import TDEndpointData
 
-ACCOUNT_ID = 253873290
-CONSUMER_KEY = "GIGBDGR7AKWXVZV3JGGLJ9AAHS1U5AWO"
-REFRESH_TOKEN = TDEndpointData.TD_TOKEN.get("refresh_token")
+ACCOUNT_ID = os.environ.get("TD_ACCOUNT_ID")
+CONSUMER_KEY =  os.environ.get("TD_CONSUMER_KEY")
+REFRESH_TOKEN = os.environ.get("TD_REFRESH_TOKEN")
 
 
 class TDCreds(BaseCreds):
