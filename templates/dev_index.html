@@ -11,29 +11,25 @@
   </head>
 
   <body>
-    <div>
-      <input
-        type="button"
-        onClick="parent.location='/dev_login'"
-        value="Home"
-      />
-    </div>
+    <input type="button" onClick="parent.location='/dev_login'" value="Home" />
 
-    <form action="sell_position" , method="post">
-      <div id="positions">
-        <select name="position_to_sell">
-          {% for position in current_positions %}
-          <option
-            value="{{ position.name, position.amount, position.description }}"
-            selected
-          >
-            {{ position.description }}
-          </option>
-          {% endfor %}
-        </select>
-        <input type="submit" value="Sell All" />
-      </div>
-    </form>
+    <div>
+      <form action="sell_position" , method="post">
+        <div id="positions">
+          <select name="position_to_sell">
+            {% for position in current_positions %}
+            <option
+              value="{{ position.name, position.amount, position.description }}"
+              selected
+            >
+              {{ position.description }}
+            </option>
+            {% endfor %}
+          </select>
+          <input type="submit" value="Sell All" />
+        </div>
+      </form>
+    </div>
 
     <form action="submit" method="get">
       <div>
