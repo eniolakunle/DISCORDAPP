@@ -147,7 +147,7 @@ def sell_chosen_position():
     else:
         url = url_for(
             "invalid_results",
-            response="No positions to sell.",
+            response="No position to sell.",
         )
     return redirect(url)
 
