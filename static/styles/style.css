@@ -31,6 +31,10 @@ div,
   flex-direction: column;
 }
 
+#sell_div{
+  margin-top:auto;
+}
+
 img{
     height: auto;
     width: auto;
