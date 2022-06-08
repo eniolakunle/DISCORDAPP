@@ -3,8 +3,10 @@ from flask import redirect, url_for, make_response
 from discord_text_parser import DiscordParser, ParseException
 from clients.base_client import BaseClient, BaseCreds, TokenException, Clients
 import logging
+import logging.handlers as handlers
 import datetime
 from functools import wraps
+import sys
 
 app = Flask(__name__)
 parser = DiscordParser()
@@ -14,11 +16,13 @@ CREDS = None
 IS_DEV = False
 CURRENT_CLIENT = None
 
-logging.basicConfig(
-    filename=f"logs/mainapp_{TODAY}.log",
-    encoding="utf-8",
-    level=logging.INFO,
-)
+stdoutHandler = logging.StreamHandler(sys.stdout)
+logFormatter = logging.Formatter(fmt=' %(name)s :: %(levelname)-8s :: %(message)s')
+logHandler = handlers.TimedRotatingFileHandler(filename=f"logs/mainapp.log", when="midnight", encoding="utf-8")
+logHandler.setLevel(logging.INFO)
+logHandler.setFormatter(logFormatter)
+
+logging.basicConfig(handlers=[logHandler, stdoutHandler])
 
 class Position:
     def __init__(self, name: str, amount: int, description: str):
