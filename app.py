@@ -18,7 +18,7 @@ CURRENT_CLIENT = None
 
 stdoutHandler = logging.StreamHandler(sys.stdout)
 logFormatter = logging.Formatter(fmt=' %(name)s :: %(levelname)-8s :: %(message)s')
-logHandler = handlers.TimedRotatingFileHandler(filename=f"logs/mainapp.log", when="midnight", encoding="utf-8")
+logHandler = handlers.TimedRotatingFileHandler(filename=f"logs/mainapp.log", when="midnight", encoding="utf-8", delay=True)
 logHandler.setLevel(logging.INFO)
 logHandler.setFormatter(logFormatter)
 
