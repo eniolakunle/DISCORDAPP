@@ -16,12 +16,11 @@ CREDS = None
 IS_DEV = False
 CURRENT_CLIENT = None
 
-stdoutHandler = logging.StreamHandler(sys.stdout)
+# stdoutHandler = logging.StreamHandler(sys.stdout)
 logging.basicConfig(
     filename=f"logs/mainapp_{TODAY}.log",
     encoding="utf-8",
     level=logging.INFO,
-    handlers=stdoutHandler,
     format=' %(name)s :: %(levelname)-8s :: %(message)s',
     )
 
