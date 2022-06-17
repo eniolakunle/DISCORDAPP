@@ -17,12 +17,14 @@ IS_DEV = False
 CURRENT_CLIENT = None
 
 stdoutHandler = logging.StreamHandler(sys.stdout)
-logFormatter = logging.Formatter(fmt=' %(name)s :: %(levelname)-8s :: %(message)s')
-logHandler = handlers.TimedRotatingFileHandler(filename=f"logs/mainapp.log", when="midnight", encoding="utf-8", delay=True)
-logHandler.setLevel(logging.INFO)
-logHandler.setFormatter(logFormatter)
+logging.basicConfig(
+    filename=f"logs/mainapp_{TODAY}.log",
+    encoding="utf-8",
+    level=logging.INFO,
+    handlers=stdoutHandler,
+    format=' %(name)s :: %(levelname)-8s :: %(message)s',
+    )
 
-logging.basicConfig(handlers=[logHandler, stdoutHandler])
 
 class Position:
     def __init__(self, name: str, amount: int, description: str):
@@ -217,7 +219,7 @@ def _is_dev():
         return False
 
 
-def set_client():
+def set_client(): #THIS STILL NEEDS WORK
     global CURRENT_CLIENT
     CURRENT_CLIENT = request.form.get("client") or Clients.TD.value
 
