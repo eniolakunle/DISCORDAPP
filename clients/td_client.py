@@ -40,7 +40,7 @@ class TDClient(BaseClient):
         try:
             r.raise_for_status()
             if response := r.text:
-                logging.info(f"TD Response: {response}")
+                logging.debug(f"TD Response: {response}")
             return r
         except HTTPError:
             raise
@@ -69,9 +69,9 @@ class TDClient(BaseClient):
         first_order["quantity"] = quantity
         first_order["instruction"] = instruction
 
-        logging.info(f"Instruction: {instruction}")
-        logging.info(f"Quantity: {quantity}")
-        logging.info(f"OPTION BODY: {body}")
+        logging.debug(f"Instruction: {instruction}")
+        logging.debug(f"Quantity: {quantity}")
+        logging.debug(f"OPTION BODY: {body}")
         return body
 
     def _place_option_order(
@@ -115,8 +115,8 @@ class TDClient(BaseClient):
             raise NotImplementedError(f"Boy implement that: {type}")
         try:
             r = self._check_response(r)
-            logging.info(f"Link: {link}")
-            logging.info(f"Kwargs: {kwargs}")
+            logging.debug(f"Link: {link}")
+            logging.debug(f"Kwargs: {kwargs}")
             return r
         except HTTPError as e:
             error = self._get_error_message(e)
@@ -177,7 +177,7 @@ class TDClient(BaseClient):
                 response = self._place_option_order(
                     symbol, quantity=quantity, instruction=instruction
                 )
-                logging.info(f"RESPONSE: {response}")
+                logging.debug(f"RESPONSE: {response}")
                 return response
             else:
                 raise GetException("Symbol Not Found")
