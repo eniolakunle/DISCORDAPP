@@ -1,3 +1,2 @@
 # DISCORDAPP
 
-export PYTHONPATH="${PYTHONPATH}:/c/Users/eniol/repos/DISCORDAPP"
