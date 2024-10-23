@@ -16,5 +16,6 @@ Welcome to **DISCORDAPP**, a personal trading web application designed for seaml
 - **Flask**: A lightweight WSGI web application framework for Python.
 - **TD Ameritrade API**: A powerful trading API for executing trades and retrieving market data.
 
-
-![image_original2](https://github.com/user-attachments/assets/b2cfcd8d-168a-4a3f-abc9-1a7ecf98dfae)
+<p align="center">
+<img src="https://github.com/user-attachments/assets/b2cfcd8d-168a-4a3f-abc9-1a7ecf98dfae" />
+<p/>
