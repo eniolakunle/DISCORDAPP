@@ -4,7 +4,7 @@ Welcome to **DISCORDAPP**, a personal trading web application designed for seaml
 
 ## 📈 Overview
 
-**DISCORDAPP** allows users to place trades rapidly and efficiently without leaving their favorite communication platform. With just a simple message in Discord, you can execute trades, making it a perfect tool for traders who want to stay connected and act fast.
+**DISCORDAPP** allowed users to place trades rapidly and efficiently with a simple copy and paste command. With just a simple message from Discord, you can execute trades, making it a perfect tool for traders who want to stay connected and act fast.
 
 ## 🚀 Features
 
